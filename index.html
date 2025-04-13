@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>¿Vamos juntos?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: #fff3f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #444;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .question {
+      background: #ffffff;
+      padding: 25px;
+      width: 100%;
+      max-width: 450px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      display: none;
+    }
+
+    .question.active {
+      display: block;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-family: 'Montserrat', sans-serif;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+    }
+
+    .yes-button {
+      background-color: #b3d9ff;
+      color: #003366;
+    }
+
+    .no-button {
+      background-color: #ffc1c1;
+      color: #660000;
+      position: absolute;
+    }
+
+    @media (max-width: 500px) {
+      .question {
+        padding: 20px 15px;
+      }
+
+      button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+ <!-- Pregunta 1 -->
+<div class="question active" id="q1">
+    <h2>¿Podemos vernos hoy?</h2>
+    <p>Te extrano mucho </p>
+    <form>
+      <input type="hidden" name="pregunta" value="¿Podemos vernos hoy?">
+      <button class="yes-button" type="button" onclick="sendAndNext(0)">Sí</button>
+      <button class="no-button" type="button">No</button>
+    </form>
+  </div>
+  
+  <!-- Pregunta 2 -->
+  <div class="question" id="q2">
+    <h2>¿Podemos hablar?</h2>
+    <p>Quiero cambiar esto y no hacer lo mismo del dia que nos vimos</p>
+    <form>
+      <input type="hidden" name="pregunta" value="¿Podemos hablar antes de llegar?">
+      <button class="yes-button" type="button" onclick="sendAndNext(1)">Sí</button>
+      <button class="no-button" type="button">No</button>
+    </form>
+  </div>
+  
+  <!-- Pregunta 3 -->
+  <div class="question" id="q3">
+    <h2>¿Te gustaría que estemos bien este día?</h2>
+    <p>Se que no funciona con una pregunta, hare lo necesario para que estemos bien y de verdad sientas algo diferente</p>
+    <form>
+      <input type="hidden" name="pregunta" value="¿Te gustaría que estemos bien este día?">
+      <button class="yes-button" type="button" onclick="sendAndNext(2)">Sí</button>
+      <button class="no-button" type="button">No</button>
+    </form>
+  </div>
+  
+  <!-- Pregunta 4 -->
+  <div class="question" id="q4">
+    <h2>¿Me dejarías abrazarte un momento?</h2>
+    <p>Extrano la paz de abrazarte</p>
+    <form>
+      <input type="hidden" name="pregunta" value="¿Me dejarías abrazarte un momento?">
+      <button class="yes-button" type="button" onclick="sendAndNext(3)">Sí</button>
+      <button class="no-button" type="button">No</button>
+    </form>
+  </div>
+  
+  <!-- Pregunta 5 -->
+  <div class="question" id="q5">
+    <h2>¿Vamos juntos con Ricardo?</h2>
+    <form>
+      <input type="hidden" name="pregunta" value="¿Vamos juntos con Ricardo?">
+      <button class="yes-button" type="button" onclick="sendAndNext(4)">Sí</button>
+      <button class="no-button" type="button">No</button>
+    </form>
+  </div>
+
+  <!-- Pregunta 6 -->
+  <div class="question" id="q6">
+    <h2>¿Paso por ti a las 5?</h2>
+    <form>
+      <input type="hidden" name="pregunta" value="¿Vamos juntos con Ricardo?">
+      <button class="yes-button" type="button" onclick="sendAndNext(5)">Sí</button>
+      <button class="no-button" type="button">No</button>
+    </form>
+  </div>
+  
+  <!-- Gracias -->
+  <div class="question" id="final">
+    <h2>Gracias por responder 💖</h2>
+    <p>Significa mucho para mí.</p>
+  </div>
+  
+
+  <script>
+    const formspreeURLs = [
+      "https://formspree.io/f/xrbpjdak",
+      "https://formspree.io/f/mldjzvwv",
+      "https://formspree.io/f/tu-form-id-3"
+    ];
+
+    function sendAndNext(index) {
+      const current = document.querySelectorAll('.question')[index];
+      const form = current.querySelector('form');
+      const data = new FormData(form);
+
+      fetch(formspreeURLs[index], {
+        method: "POST",
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(() => {
+        current.classList.remove("active");
+        const next = document.querySelectorAll('.question')[index + 1];
+        if (next) {
+          next.classList.add("active");
+        } else {
+          document.getElementById('final').classList.add("active");
+        }
+      });
+    }
+
+    // Botón "No" escurridizo
+    document.querySelectorAll('.no-button').forEach(button => {
+      button.addEventListener('mouseover', moveButton);
+      button.addEventListener('touchstart', moveButton);
+    });
+
+    function moveButton(e) {
+      const btn = e.target;
+      const form = btn.closest('form');
+      const formWidth = form.offsetWidth;
+      const formHeight = form.offsetHeight;
+      const maxX = formWidth - btn.offsetWidth;
+      const maxY = formHeight - btn.offsetHeight;
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+      btn.style.left = `${randomX}px`;
+      btn.style.top = `${randomY}px`;
+    }
+  </script>
+
+</body>
+</html>
