@@ -16,6 +16,8 @@
       justify-content: center;
       min-height: 100vh;
       padding: 20px;
+      position: relative;
+      overflow: hidden;
     }
 
     h2 {
@@ -33,6 +35,8 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
       text-align: center;
       display: none;
+      position: relative;
+      z-index: 1;
     }
 
     .question.active {
@@ -43,7 +47,6 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      position: relative;
     }
 
     button {
@@ -59,12 +62,14 @@
     .yes-button {
       background-color: #b3d9ff;
       color: #003366;
+      z-index: 2;
     }
 
     .no-button {
       background-color: #ffc1c1;
       color: #660000;
       position: absolute;
+      z-index: 3;
     }
 
     @media (max-width: 500px) {
@@ -80,86 +85,89 @@
 </head>
 <body>
 
- <!-- Pregunta 1 -->
-<div class="question active" id="q1">
+  <!-- Pregunta 1 -->
+  <div class="question active" id="q1">
     <h2>¿Podemos vernos hoy?</h2>
-    <p>Te extrano mucho </p>
+    <p>Te extraño mucho</p>
     <form>
       <input type="hidden" name="pregunta" value="¿Podemos vernos hoy?">
       <button class="yes-button" type="button" onclick="sendAndNext(0)">Sí</button>
-      <button class="no-button" type="button">No</button>
     </form>
   </div>
-  
+  <button class="no-button" id="no-btn-1" type="button">No</button>
+
   <!-- Pregunta 2 -->
   <div class="question" id="q2">
     <h2>¿Podemos hablar?</h2>
-    <p>Quiero cambiar esto y no hacer lo mismo del dia que nos vimos</p>
+    <p>Quiero cambiar esto y no hacer lo mismo del día que nos vimos</p>
     <form>
       <input type="hidden" name="pregunta" value="¿Podemos hablar antes de llegar?">
       <button class="yes-button" type="button" onclick="sendAndNext(1)">Sí</button>
-      <button class="no-button" type="button">No</button>
     </form>
   </div>
-  
+  <button class="no-button" id="no-btn-2" type="button">No</button>
+
   <!-- Pregunta 3 -->
   <div class="question" id="q3">
     <h2>¿Te gustaría que estemos bien este día?</h2>
-    <p>Se que no funciona con una pregunta, hare lo necesario para que estemos bien y de verdad sientas algo diferente</p>
+    <p>Sé que no funciona con una pregunta, haré lo necesario para que estemos bien y de verdad sientas algo diferente</p>
     <form>
       <input type="hidden" name="pregunta" value="¿Te gustaría que estemos bien este día?">
       <button class="yes-button" type="button" onclick="sendAndNext(2)">Sí</button>
-      <button class="no-button" type="button">No</button>
     </form>
   </div>
-  
+  <button class="no-button" id="no-btn-3" type="button">No</button>
+
   <!-- Pregunta 4 -->
   <div class="question" id="q4">
     <h2>¿Me dejarías abrazarte un momento?</h2>
-    <p>Extrano la paz de abrazarte</p>
+    <p>Extraño la paz de abrazarte</p>
     <form>
       <input type="hidden" name="pregunta" value="¿Me dejarías abrazarte un momento?">
       <button class="yes-button" type="button" onclick="sendAndNext(3)">Sí</button>
-      <button class="no-button" type="button">No</button>
     </form>
   </div>
-  
+  <button class="no-button" id="no-btn-4" type="button">No</button>
+
   <!-- Pregunta 5 -->
   <div class="question" id="q5">
     <h2>¿Vamos juntos con Ricardo?</h2>
     <form>
       <input type="hidden" name="pregunta" value="¿Vamos juntos con Ricardo?">
       <button class="yes-button" type="button" onclick="sendAndNext(4)">Sí</button>
-      <button class="no-button" type="button">No</button>
     </form>
   </div>
+  <button class="no-button" id="no-btn-5" type="button">No</button>
 
   <!-- Pregunta 6 -->
   <div class="question" id="q6">
     <h2>¿Paso por ti a las 5?</h2>
     <form>
-      <input type="hidden" name="pregunta" value="¿Vamos juntos con Ricardo?">
+      <input type="hidden" name="pregunta" value="¿Paso por ti a las 5?">
       <button class="yes-button" type="button" onclick="sendAndNext(5)">Sí</button>
-      <button class="no-button" type="button">No</button>
     </form>
   </div>
-  
+  <button class="no-button" id="no-btn-6" type="button">No</button>
+
   <!-- Gracias -->
   <div class="question" id="final">
     <h2>Gracias por responder 💖</h2>
     <p>Significa mucho para mí.</p>
   </div>
-  
 
   <script>
     const formspreeURLs = [
       "https://formspree.io/f/xrbpjdak",
       "https://formspree.io/f/mldjzvwv",
-      "https://formspree.io/f/tu-form-id-3"
+      "https://formspree.io/f/tu-form-id-3",
+      "https://formspree.io/f/tu-form-id-4",
+      "https://formspree.io/f/tu-form-id-5",
+      "https://formspree.io/f/tu-form-id-6"
     ];
 
     function sendAndNext(index) {
-      const current = document.querySelectorAll('.question')[index];
+      const questions = document.querySelectorAll('.question');
+      const current = questions[index];
       const form = current.querySelector('form');
       const data = new FormData(form);
 
@@ -171,33 +179,37 @@
         }
       }).then(() => {
         current.classList.remove("active");
-        const next = document.querySelectorAll('.question')[index + 1];
+        document.getElementById(`no-btn-${index + 1}`).style.display = 'none';
+        const next = questions[index + 1];
         if (next) {
           next.classList.add("active");
+          document.getElementById(`no-btn-${index + 2}`).style.display = 'block';
         } else {
           document.getElementById('final').classList.add("active");
         }
       });
     }
 
-    // Botón "No" escurridizo
-    document.querySelectorAll('.no-button').forEach(button => {
-      button.addEventListener('mouseover', moveButton);
-      button.addEventListener('touchstart', moveButton);
-    });
-
-    function moveButton(e) {
-      const btn = e.target;
-      const form = btn.closest('form');
-      const formWidth = form.offsetWidth;
-      const formHeight = form.offsetHeight;
-      const maxX = formWidth - btn.offsetWidth;
-      const maxY = formHeight - btn.offsetHeight;
+    function moveButton(btn) {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const maxX = viewportWidth - btn.offsetWidth;
+      const maxY = viewportHeight - btn.offsetHeight;
       const randomX = Math.random() * maxX;
       const randomY = Math.random() * maxY;
       btn.style.left = `${randomX}px`;
       btn.style.top = `${randomY}px`;
     }
+
+    document.querySelectorAll('.no-button').forEach(btn => {
+      btn.style.position = 'absolute';
+      btn.style.display = 'none'; // solo mostrar el que esté activo
+      btn.addEventListener('mouseover', () => moveButton(btn));
+      btn.addEventListener('touchstart', () => moveButton(btn));
+    });
+
+    // Mostrar el primer botón "No"
+    document.getElementById('no-btn-1').style.display = 'block';
   </script>
 
 </body>
